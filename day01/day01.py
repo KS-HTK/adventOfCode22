@@ -3,7 +3,7 @@
 from typing import List, Callable
 
 input = None
-with open('day01/input01.txt', 'r', encoding='utf-8') as f:
+with open('day01/input', 'r', encoding='utf-8') as f:
   input = f.read()
 input = input.rstrip().split('\n\n')
 elf: List[List[int]] = [list(map(lambda x: int(x), s.split('\n'))) for s in input]
