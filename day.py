@@ -3,18 +3,20 @@
 """Basic Python file for each day"""
 from typing import List
 
-input: List[str] = None
+input = None
 # TODO: change the path of input file!
 with open('day01/input', 'r', encoding='utf-8') as f:
   input = f.read().rstrip().split('\n')
-  input = map(lambda s: s.strip(), f.readlines())
+input = list(map(lambda s: s.strip(), input))
+
 
 # Part 1:
-def part1(input=None):
+def part1(input = None):
   return 0
 
+
 # Part 2:
-def part2(input=None):
+def part2(input = None):
   return 0
 
 
