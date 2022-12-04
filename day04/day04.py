@@ -2,12 +2,12 @@
 
 from typing import List
 
-input: List[str] = None
+input = None
 with open('day04/input', 'r', encoding='utf-8') as f:
   input = f.read().rstrip().split('\n')
-  input = list(map(lambda s: s.strip().split(','), input))
-  input = list(map(lambda l: list(map(lambda s: s.split('-'), l)), input))
-  input = [[[int(j) for j in i] for i in x] for x in input]
+input = list(map(lambda s: s.strip().split(','), input))
+input = list(map(lambda l: list(map(lambda s: s.split('-'), l)), input))
+input = [[[int(j) for j in i] for i in x] for x in input]
 
 
 # Part 1:
