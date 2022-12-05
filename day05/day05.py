@@ -2,14 +2,13 @@
 
 from typing import List
 
-input = None
 with open('day05/input', 'r', encoding='utf-8') as f:
   [start, steps] = f.read().rstrip().split('\n\n')
 steps = [s.lstrip('move ') for s in steps.split('\n')]
 steps = [[[int(x) for x in s.split(' to ')] for s in l.split(' from ')] for l in steps]
 
 # Part 1:
-def part1(s, steps):
+def part1(s: List[List[str]], steps: List[List[int]]) -> str:
   for [[c], [f, t]] in steps:
     if len(s[f-1]):
       tmp = s[f-1][-c:]
@@ -19,7 +18,7 @@ def part1(s, steps):
   return get_top_crates(s)
 
 # Part 2:
-def part2(s, steps):
+def part2(s: List[List[str]], steps: List[List[int]]) -> str:
   for [[c], [f, t]] in steps:
     if len(s[f-1]):
       s[t-1].extend(s[f-1][-c:])
@@ -46,6 +45,6 @@ def parse_startconfig(input: str) -> List[List[str]]:
 
 
 if __name__ == "__main__":
-  startconfig = parse_startconfig(start)
+  startconfig: List[List[str]] = parse_startconfig(start)
   print("Part 1:", part1([s[:] for s in startconfig], steps))
   print("Part 2:", part2([s[:] for s in startconfig], steps))
