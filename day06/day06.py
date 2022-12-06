@@ -11,9 +11,7 @@ def part2(input: str = None) -> int:
   return find_first_unique_substr(input, 14)
 
 def find_first_unique_substr(input, l: int = 4) -> int:
-  for i in range(len(input)):
-    if i < l-1:
-      continue
+  for i in range(l, len(input)):
     if len(set(input[i-l+1:i+1])) == l:
       return i+1
 
