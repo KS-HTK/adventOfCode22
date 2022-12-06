@@ -14,7 +14,7 @@ def find_first_unique_substr(input, l: int = 4) -> int:
   for i in range(len(input)):
     if i < l-1:
       continue
-    if len(''.join(set(input[i-l+1:i+1]))) == l:
+    if len(set(input[i-l+1:i+1])) == l:
       return i+1
 
 def get_input():
