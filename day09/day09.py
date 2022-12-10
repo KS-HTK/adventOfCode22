@@ -2,7 +2,6 @@
 
 from typing import List, Dict, Set, Tuple
 
-
 def solve(cmds: List[List[str]]) -> (int, int):
   directions: Dict[str, Tuple[int, int]] = {
     "U": (0, 1),
@@ -36,33 +35,23 @@ def sim_tail(head: Tuple[int, int], tail: Tuple[int, int]) -> Tuple[int, int]:
     return tail
 
 def move(t: Tuple[int, int]) -> Dict[Tuple[int, int], Tuple[int, int]]:
-  # this could maybe be done with 
-  moves: Dict[Tuple[int, int], Tuple[int, int]] = {
-    # in line movements
-    add(t, (-2,  0)): add(t, (-1,  0)),
-    add(t, ( 0, -2)): add(t, ( 0, -1)),
-    add(t, ( 2,  0)): add(t, ( 1,  0)),
-    add(t, ( 0,  2)): add(t, ( 0,  1)),
-    # diagonal movements
-    add(t, (-2, -2)): add(t, (-1, -1)),
-    add(t, ( 2,  2)): add(t, ( 1,  1)),
-    add(t, (-2,  2)): add(t, (-1,  1)),
-    add(t, ( 2, -2)): add(t, ( 1, -1)),
-    # knights move
-    add(t, (-2, -1)): add(t, (-1,  0)),
-    add(t, (-2,  1)): add(t, (-1,  0)),
-    add(t, ( 2, -1)): add(t, ( 1,  0)),
-    add(t, ( 2,  1)): add(t, ( 1,  0)),
-    add(t, (-1, -2)): add(t, ( 0, -1)),
-    add(t, ( 1, -2)): add(t, ( 0, -1)),
-    add(t, (-1,  2)): add(t, ( 0,  1)),
-    add(t, ( 1,  2)): add(t, ( 0,  1)),
-  }
+  moves: Dict[Tuple[int, int], Tuple[int, int]] = {}
+  for dx in range(-2, 3):
+    for dy in range(-2, 3):
+      if dx not in [-2, 2] and dy not in [-2, 2]:
+        continue
+      moves[add(t, (dx, dy))] = add(t, (sign(dx), sign(dy)))
+      if (abs(dx) == 2 and abs(dy) == 1) or (abs(dx) == 1 and abs(dy) == 2):
+        moves[add(t, (dx, dy))] = add(t, (dx-sign(dx), dy-sign(dy)))
   return moves
 
 # tuple addition
 def add(t1: Tuple[int, int], t2: Tuple[int, int]) -> Tuple[int, int]:
   return tuple(map(lambda i, j: i + j, t1, t2))
+
+# sign function
+def sign(x: int) -> int:
+  return -1 if x < 0 else 0 if x == 0 else 1
 
 def get_input() -> List[List[str]]:
   with open('day09/input', 'r', encoding='utf-8') as f:
