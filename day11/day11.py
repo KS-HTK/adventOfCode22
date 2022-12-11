@@ -2,7 +2,17 @@
 
 import os
 import re
+from time import perf_counter
 from typing import List, Callable
+
+def profiler(method):
+    def wrapper_method(*arg, **kw):
+        t = perf_counter()
+        ret = method(*arg, **kw)
+        print('Method ' + method.__name__ + ' took : ' +
+              "{:2.5f}".format(perf_counter()-t) + ' sec')
+        return ret
+    return wrapper_method
 
 class Monkey():
   def __init__(self, monkey_str: List[str]) -> None:
@@ -76,7 +86,8 @@ def get_input() -> List[str]:
     content = [s.split('\n') for s in f.read().rstrip().split('\n\n')]
   return content
 
-if __name__ == "__main__":
+@profiler
+def solve():
   content: List[str] = get_input()
   monkeys1: List[Monkey] = [None]*len(content)
   monkeys2: List[Monkey] = [None]*len(content)
@@ -95,3 +106,6 @@ if __name__ == "__main__":
 
   print("Part 1:", part1(monkeys1))
   print("Part 2:", part2(monkeys2))
+
+if __name__ == "__main__":
+  solve()
