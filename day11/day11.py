@@ -6,12 +6,12 @@ from time import perf_counter
 from typing import List, Callable
 
 def profiler(method):
-    def profiler_method(*arg, **kw):
-        t = perf_counter()
-        ret = method(*arg, **kw)
-        print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
-        return ret
-    return profiler_method
+  def profiler_method(*arg, **kw):
+      t = perf_counter()
+      ret = method(*arg, **kw)
+      print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+      return ret
+  return profiler_method
 
 class Monkey():
   def __init__(self, monkey_str: List[str]) -> None:
