@@ -26,18 +26,17 @@ def part1(content: List[Tuple[int, int, int]]) -> int:
 
 # Part 2:
 def part2(content: List[Tuple[int, int, int]]) -> int:
-  max_x: int = 4000000
-  for sx, sy, md in content:
-    for p in range(md + 1):
-      for tx, ty in ((sx - md - 1 + p, sy - p),
-                     (sx + md + 1 - p, sy - p),
-                     (sx - md - 1 + p, sy + p),
-                     (sx + md + 1 - p, sy + p)):
-        if (0 <= tx <= max_x and
-            0 <= ty <= max_x and
-            all(abs(tx - sx2) + abs(ty - sy2) > md2
-                for sx2, sy2, md2 in content)):
-          return int(tx * max_x + ty)
+  sign = lambda x: x // abs(x) if x != 0 else 0
+  for sx, sy, mds in content:
+    for tx, ty, mdt in content:
+      md = int(abs(sx - tx) + abs(sy - ty))
+      if md == mds+mdt+2:
+        dirx = sign(tx - sx)
+        for p in range(mds+1):
+          ux = sx + dirx * (mds + 1) + -1 * dirx * p
+          uy = sy + sign(ty - sy) * p
+          if (all(abs(ux - vx) + abs(uy - vy) > mdv for vx, vy, mdv in content)):
+            return int(ux * 4000000 + uy)
 
 def get_input():
   with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
@@ -48,8 +47,8 @@ def get_input():
 @profiler
 def solve():
   content: List[Tuple[complex, int]] = get_input()
-  print("Part 1:", part1(content)) # 5083287
-  print("Part 2:", part2(content)) # 13134039205729
+  print("Part 1:", part1(content))
+  print("Part 2:", part2(content))
 
 if __name__ == "__main__":
   solve()
