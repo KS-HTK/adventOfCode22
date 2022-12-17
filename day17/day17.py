@@ -90,8 +90,8 @@ def build_tower() -> int:
       #  - pt1_hight ensures no premature cycle detection
       shape = rock%len(ROCKS)
       if (jet_index, shape) in cycle and pt1_hight != 0:
-        cyc_rock = rock - cycle[(jet_index, shape)][ 0 ]
-        cyc_tower_hight = len(tower)+truncated - cycle[(jet_index, shape)][ 1 ]
+        cyc_rock = rock - cycle[(jet_index, shape)][0]
+        cyc_tower_hight = len(tower)+truncated - cycle[(jet_index, shape)][1]
       cycle[(jet_index, shape)] = (rock, len(tower)+truncated)
       if cyc_tower_hight and cyc_rock and (1000000000000 - rock) % cyc_rock == 0:
         pt2_hight = len(tower)+truncated + (1000000000000 - rock) // cyc_rock * cyc_tower_hight
@@ -113,15 +113,13 @@ def visualize_tower(tower: List[int], rock_hight: int, rock_shape: List[int]) ->
   print()
 
 def get_input():
-  with open(os.path.dirname(os.path.realpath(__file__))+'/input.txt', 'r', encoding='utf-8') as f:
+  with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
     content = [s == '<' for s in f.read().rstrip()]
   return content
 
 @profiler
 def solve():
   print("Part 1: %d\nPart 2: %d" % build_tower())
-  #Part 1: 3083 (3068)
-  #Part 2: 1532183908048 (1514285714288)
 
 if __name__ == "__main__":
   solve()
