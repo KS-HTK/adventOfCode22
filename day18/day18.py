@@ -2,7 +2,7 @@
 
 import os
 from time import perf_counter
-from typing import List, Tuple
+from typing import List, Tuple, Set
 
 def profiler(method):
   def profiler_method(*arg, **kw):
@@ -14,31 +14,35 @@ def profiler(method):
 
 # Part 1:
 def part1(cubes: List[Tuple[int, int, int]]) -> int:
-  return sum([len(list([d for d in gen_neighbors(*c) if d not in cubes])) for c in cubes])
+  return sum([1 for c in cubes for d in gen_neighbors(*c) if d not in cubes])
 
 # Part 2:
 def part2(cubes: List[Tuple[int, int, int]]) -> int:
-  _min = min([d for c in cubes for d in c])
-  _max = max([d for c in cubes for d in c])
+  _min: int = min([d for c in cubes for d in c])
+  _max: int = max([d for c in cubes for d in c])
 
-  trapped = set()
+  trapped: Set[Tuple[int, int, int]] = set()
+  untrapped: Set[Tuple[int, int, int]] = set()
   for x in range(_min, _max+1):
     for y in range(_min, _max+1):
       for z in range(_min, _max+1):
-        if is_trapped((x, y, z), cubes, _min, _max):
+        if (x, y, z) in cubes:
+          continue
+        if is_trapped((x, y, z), cubes, _min, _max, trapped, untrapped):
           trapped.add((x, y, z))
-  
-  surface = 0
-  for c in cubes:
-    for n in gen_neighbors(*c):
-      if n not in cubes and n not in trapped:
-        surface += 1
+        else:
+          untrapped.add((x, y, z))
 
-  return surface
+  return sum([1 for c in cubes for n in gen_neighbors(*c) if (n in untrapped or (n not in cubes and n not in trapped))])
   
-def is_trapped(c, cube_set, _min, _max):
-    queue = []
-    visited = set()
+def is_trapped(c: Tuple[int, int, int],
+               cube_set: List[Tuple[int, int, int]],
+               _min: int,
+               _max: int,
+               trapped: Set[Tuple[int, int, int]],
+               untrapped: Set[Tuple[int, int, int]]) -> bool:
+    queue: List[Tuple[int, int, int]] = []
+    visited: Set[Tuple[int, int, int]] = set()
     def add(key):
         if key not in visited and key not in cube_set:
             visited.add(key)
@@ -49,10 +53,14 @@ def is_trapped(c, cube_set, _min, _max):
         if min(*c) < _min or max(*c) > _max:
             return False
         for n in gen_neighbors(*c):
+            if n in trapped:
+                return True
+            if n in untrapped:
+                return False
             add(n)
     return True
 
-def gen_neighbors(x, y, z: Tuple[int, int, int]):
+def gen_neighbors(x: int, y: int, z:int):
   yield (x+1, y, z)
   yield (x-1, y, z)
   yield (x, y+1, z)
@@ -67,7 +75,7 @@ def get_input() -> List[Tuple[int, int, int]]:
   return content
 
 @profiler
-def solve():
+def solve() -> None:
   content = get_input()
   print("Part 1:", part1(content))
   print("Part 2:", part2(content))
