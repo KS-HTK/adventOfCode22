@@ -14,7 +14,6 @@ def profiler(method):
   return profiler_method
 
 # Part 1:
-@profiler
 def part1(bps: Dict[int, List[Tuple[int, int, int, int]]]) -> int:
   quality_sum: int = 0
   for bp_id, robot_costs in bps.items():
@@ -22,7 +21,7 @@ def part1(bps: Dict[int, List[Tuple[int, int, int, int]]]) -> int:
     quality_sum += num_mined*bp_id
   return quality_sum
 
-# Part 2: # 3080
+# Part 2:
 def part2(bps: Dict[int, List[Tuple[int, int, int, int]]]) -> int:
   mined: int = 1
   for bp_id, robot_costs in bps.items():
@@ -33,12 +32,12 @@ def part2(bps: Dict[int, List[Tuple[int, int, int, int]]]) -> int:
     mined *= num_mined
   return mined
 
-def quality(state) -> int:
-  _, (_, _, mined) = state
-  return 1000*mined[3] + 100*mined[2] + 10*mined[1] + mined[0]
-
 # the max_queue value should be increased to 5000 if you are unsure about the results
-def bfs(costs, robots, num_time, max_queue = 150):
+def bfs(costs, robots, num_time, max_queue = 125) -> int:
+  def quality(state) -> int:
+    _, (_, _, mined) = state
+    return 1000*mined[3] + 100*mined[2] + 10*mined[1] + mined[0]
+  
   queue = list()
   queue.append((0, (robots, (0,0,0,0), (0,0,0,0)))) 
   max_geodes: int = 0
@@ -88,7 +87,7 @@ def get_input():
 
 @profiler
 def solve():
-  bps = get_input()
+  bps: Dict[int, List[Tuple[int, int, int, int]]] = get_input()
   print("Part 1:", part1(bps))
   print("Part 2:", part2(bps))
 
