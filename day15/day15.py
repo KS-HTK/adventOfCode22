@@ -82,4 +82,4 @@ def solve2() -> None:
 
 if __name__ == "__main__":
   solve()
-  solve2()
+  #solve2()
