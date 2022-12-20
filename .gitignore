@@ -2,4 +2,5 @@
 *.txt
 *.s*
 
-**/__pychache__/ # ignore any __pycache__ folders
+# ignore all __pycache__ directories
+**/__pycache__
