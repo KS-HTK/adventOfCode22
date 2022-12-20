@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from typing import List
+from time import perf_counter
+
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
 
 # 1 = Rock
 # 2 = Paper
@@ -51,7 +60,10 @@ def get_round_score(me: int, op: int) -> int:
     # me Lose
     return me
 
-
-if __name__ == "__main__":
+@profiler
+def solve():
   print("Part 1:", part1(input))
   print("Part 2:", part2(list(input)))
+
+if __name__ == "__main__":
+  solve()

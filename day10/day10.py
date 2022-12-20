@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from typing import List
+from time import perf_counter
+
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
 
 # Part 1:
 def part1(lines: List[str]) -> int:
@@ -51,8 +60,12 @@ def get_input():
     input = [s.strip() for s in f.read().rstrip().split('\n')]
   return input
 
-if __name__ == "__main__":
+@profiler
+def solve():
   input = get_input()
   print("Part 1:", part1(input))
   print("Part 2:")
   print(part2(input))
+
+if __name__ == "__main__":
+  solve()

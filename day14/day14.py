@@ -2,7 +2,7 @@
 
 import os
 from time import perf_counter
-from typing import List, Dict, Set
+from typing import Set
 
 def profiler(method):
   def profiler_method(*arg, **kw):

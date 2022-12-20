@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from typing import List, Dict, Set, Tuple
+from time import perf_counter
 
-def solve(cmds: List[List[str]]) -> (int, int):
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
+
+def _solve(cmds: List[List[str]]) -> Tuple[int, int]:
   directions: Dict[str, Tuple[int, int]] = {
     "U": (0, 1),
     "D": (0, -1),
@@ -46,8 +55,12 @@ def get_input() -> List[List[str]]:
     input = [s.split(" ") for s in f.read().rstrip().split('\n')]
   return input
 
-if __name__ == "__main__":
+@profiler
+def solve():
   input: List[List[str]] = get_input()
-  sol: Tuple[int, int] = solve(input)
+  sol: Tuple[int, int] = _solve(input)
   print("Part 1:", sol[0])
   print("Part 2:", sol[1])
+
+if __name__ == "__main__":
+  solve()
