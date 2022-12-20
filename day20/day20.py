@@ -4,6 +4,11 @@ import os
 from time import perf_counter
 from typing import List, Tuple
 
+# Global variables
+# lookup[index] = original_index
+#  This might seem inverse, but it makes updating the list easier
+lookup: List[int] = []
+
 def profiler(method):
   def profiler_method(*arg, **kw):
     t = perf_counter()
@@ -13,60 +18,52 @@ def profiler(method):
   return profiler_method
 
 # Part 1:
-def part1(content = None) -> int:
-  content = mix(content)
-  return find_coords(content)
+def part1(content: List[int]) -> int:
+  global lookup
+  lookup = [i for i in range(len(content))] # reset lookup
+  return find_coords(mix(content))
 
 # Part 2:
-def part2(content = None) -> int:
+def part2(content: List[int]) -> int:
+  global lookup
+  lookup = [i for i in range(len(content))] # reset lookup
   for _ in range(10):
     content = mix(content)
   return find_coords(content)
 
-def mix(content: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+def mix(content: List[int]) -> List[int]:
+  global lookup
   for i in range(len(content)):
-    # find (i, _) in content
-    ind = 0
-    while True:
-      if content[ind][0] == i:
-        break
-      ind += 1
-    # move content[ind]
-    content = move(ind, content)
+    pos = lookup.index(i)
+    # move num and its
+    num = content.pop(pos)
+    ind = lookup.pop(pos)
+    n_ind = (pos+num) % len(content)
+    if n_ind == 0:
+      n_ind = len(content)
+    content.insert(n_ind, num)
+    lookup.insert(n_ind, ind)
   return content
 
-def find_coords(content: List[Tuple[int, int]]) -> int:
-  ind = 0
-  while True:
-    if content[ind][1] == 0:
-      break
-    ind += 1
+def find_coords(content: List[int]) -> int:
+  # search for value 0
+  ind = content.index(0)
+  return sum([content[(ind+i*1000)%len(content)] for i in range(1,4)])
 
-  # find coords
-  k1 = (ind+1000)%len(content)
-  k2 = (ind+2000)%len(content)
-  k3 = (ind+3000)%len(content)
-  return content[k1][1]+content[k2][1]+content[k3][1]
-
-
-def move(pos: int, arr: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
-  ind, num = arr.pop(pos)
-  n_ind = (pos+num)%len(arr)
-  if n_ind == 0:
-    n_ind = len(arr)
-  arr.insert(n_ind, (ind, num))
-  return arr
-
-def get_input():
+def get_input() -> Tuple[List[int], List[int]]:
+  content1: List[int] = []
+  content2: List[int] = []
   with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
-    content = [(i, int(s.strip())) for i, s in enumerate(f.read().rstrip().split('\n'))]
-  content2 = [(i, n * 811589153) for i, n in content]
-  return content, content2
+    for s in f.read().rstrip().split('\n'):
+      v = int(s.strip())
+      content1.append(v)
+      content2.append(v * 811589153)
+  return content1, content2
 
 @profiler
 def solve():
-  content, content2 = get_input()
-  print("Part 1:", part1(content))
+  content1, content2 = get_input()
+  print("Part 1:", part1(content1))
   print("Part 2:", part2(content2))
 
 if __name__ == "__main__":
