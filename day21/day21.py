@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-from sympy import simplify, solveset, symbols
 from time import perf_counter
-from typing import List, Dict
+from sympy import simplify, solveset, symbols
+from typing import List, Dict, Tuple, Callable
 
 def profiler(method):
   def profiler_method(*arg, **kw):
@@ -14,17 +14,17 @@ def profiler(method):
   return profiler_method
 
 # Part 1:
-def part1(content) -> int:
+def part1(content: Dict[str, int|Tuple[str, str, Callable[[int, int], int]]]) -> int:
   while not isinstance(content['root'], int):
     for k, v in content.items():
       if isinstance(v, int):
         continue
       if isinstance(content[v[0]], int) and isinstance(content[v[1]], int):
-        content[k] = v[2](content[v[0]], content[v[1]])
+        content[k] = round(v[2](content[v[0]], content[v[1]]))
   return content['root']
 
 # Part 2: (original implementation)
-def original_part2(content = None) -> str:
+def original_part2(content: List[complex|Tuple[str, str, Callable[[complex, complex], complex]]]) -> str:
   content['humn'] = 1j
   while not isinstance(content['root'], complex):
     for k, v in content.items():
@@ -37,8 +37,9 @@ def original_part2(content = None) -> str:
           return abs(int(res))
         content[k] = v[2](content[v[0]], content[v[1]])
 
-# Improved Part 2: (using sympy)
-def part2(content = None) -> str:
+# Improved Part 2: (using sympy) I did this because my original implementation seems like a hack.
+# It would fail if any part where humn is used would get squared.
+def part2(content: List[int|Tuple[str, str, str]]) -> int:
   nodes: Dict[str, Node] = {}
   for k, v in content.items():
     if k == 'humn':
@@ -71,19 +72,13 @@ OPPMAP = {
   '+': lambda a, b: a+b,
   '-': lambda a, b: a-b,
   '*': lambda a, b: a*b,
-  '/': lambda a, b: a//b,
-}
-OPPMAP2 = {
-  '+': lambda a, b: a+b,
-  '-': lambda a, b: a-b,
-  '*': lambda a, b: a*b,
   '/': lambda a, b: a/b,
 }
 
 def get_input():
   with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
     content = [s.strip() for s in f.read().rstrip().split('\n')]
-  m1, m2 = {}, {}
+  m1, m2, m3 = {}, {}, {}
   for l in content:
     k, v = l.split(': ')
     try:
@@ -93,10 +88,11 @@ def get_input():
     else:
       m1[k] = v
       m2[k] = complex(v, 0)
+      m3[k] = v
       continue
     v = v.split(' ')
     m1[k] = (v[0], v[2], OPPMAP[v[1]])
-    m2[k] = (v[0], v[2], OPPMAP2[v[1]])
+    m2[k] = (v[0], v[2], OPPMAP[v[1]])
     m3[k] = (v[0], v[2], v[1])
   return m1, m2, m3
 
@@ -104,7 +100,8 @@ def get_input():
 def solve():
   m1, m2, m3 = get_input()
   print("Part 1:", part1(m1))
-  print("Part 2:", part2(m3))
+  print("Part 2:", original_part2(m2))
+  #print("Part 2:", part2(m3))
   
 
 if __name__ == "__main__":
