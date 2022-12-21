@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from typing import List
+from time import perf_counter
+
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
 
 input: List[str] = None
 with open('day03/input', 'r', encoding='utf-8') as f:
@@ -41,7 +50,10 @@ def get_prio(char: str) -> int:
   ordn = ord(char)
   return ordn-38 if ordn < 97 else ordn-96
 
-
-if __name__ == "__main__":
+@profiler
+def solve():
   print("Part 1:", part1(input))
   print("Part 2:", part2(input))
+
+if __name__ == "__main__":
+  solve()

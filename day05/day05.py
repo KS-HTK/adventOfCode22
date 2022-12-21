@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from typing import List
+from time import perf_counter
+
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
 
 with open('day05/input', 'r', encoding='utf-8') as f:
   [start, steps] = f.read().rstrip().split('\n\n')
@@ -25,11 +34,9 @@ def part2(s: List[List[str]], steps: List[List[int]]) -> str:
       del s[f-1][-c:]
   return get_top_crates(s)
 
-
 def get_top_crates(config: List[List[str]]) -> str:
   rtn: str = ''.join([s.pop() for s in config]) 
   return rtn
-
 
 def parse_startconfig(input: str) -> List[List[str]]:
   input = input.splitlines()
@@ -43,8 +50,11 @@ def parse_startconfig(input: str) -> List[List[str]]:
         startconfig[i].append(line[1+i*4])
   return startconfig
 
-
-if __name__ == "__main__":
+@profiler
+def solve():
   startconfig: List[List[str]] = parse_startconfig(start)
   print("Part 1:", part1([s[:] for s in startconfig], steps))
   print("Part 2:", part2([s[:] for s in startconfig], steps))
+
+if __name__ == "__main__":
+  solve()

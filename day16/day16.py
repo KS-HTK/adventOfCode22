@@ -3,7 +3,7 @@
 import os
 import re
 from time import perf_counter
-from typing import List, Dict, Set
+from typing import Dict, Set
 
 def profiler(method):
   def profiler_method(*arg, **kw):
@@ -14,7 +14,6 @@ def profiler(method):
   return profiler_method
 
 # Part 1:
-@profiler
 def part1(valves: Dict[str, Dict]) -> int:
   best = 0
   def search(opened, flowed, pos, time_rem):
@@ -55,7 +54,6 @@ def part2(valves: Dict[str, Dict]) -> int:
 # Aternative to part 1 & 2:
 # Way faster than part 2, but not as fast as part 1
 # Idea curtesy of Xodarap
-@profiler
 def calc(valves: Dict[str, Dict], time: int = 30) -> int:
   pathset = set()
   def generate_paths(pos, path, time_rem):

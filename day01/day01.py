@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from typing import List, Callable
+from typing import List
+from time import perf_counter
+
+def profiler(method):
+  def profiler_method(*arg, **kw):
+    t = perf_counter()
+    ret = method(*arg, **kw)
+    print(f'{method.__name__} method took : {perf_counter()-t:.4f} sec')
+    return ret
+  return profiler_method
 
 input = None
 with open('day01/input', 'r', encoding='utf-8') as f:
@@ -15,7 +24,6 @@ def part1(input: List[List[int]]=None) -> int:
     if c > max:
       max = c
   return max
-
 
 # Part 2:
 def part2(input: List[int]=None) -> int:
@@ -34,6 +42,10 @@ def part2(input: List[int]=None) -> int:
       thi = c
   return max+sec+thi
 
-if __name__ == "__main__":
+@profiler
+def solve():
   print("Part 1:", part1([sum(x) for x in elf]))
   print("Part 2:", part2([sum(x) for x in elf]))
+
+if __name__ == "__main__":
+  solve()
