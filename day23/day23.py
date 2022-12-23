@@ -32,7 +32,7 @@ checks: List[List[complex]] = [
 ]
 
 # Part 1:
-def calc(elfs: Dict[complex, List[complex]]) -> Tuple[int, int]:
+def calc(elfs: List[complex]) -> Tuple[int, int]:
   global checks
   _round: int = 0
   part1_solution: int = 0
@@ -41,7 +41,7 @@ def calc(elfs: Dict[complex, List[complex]]) -> Tuple[int, int]:
     moved_count = 0
     # first half: propose move
     neoelfs: Dict[complex, List[complex]] = {}
-    for elf in list(elfs):
+    for elf in elfs:
       moved: bool = False
       if any([f in elfs for f in get_neighbours(elf)]):
         for direction in checks:
@@ -65,7 +65,7 @@ def calc(elfs: Dict[complex, List[complex]]) -> Tuple[int, int]:
           neoelfs[e] = [e]
         del neoelfs[elf]
     # second half: move
-    elfs = neoelfs
+    elfs = neoelfs.keys()
     checks.append(checks.pop(0)) # rotate directions list
     
     # save part1 solution
@@ -88,19 +88,19 @@ def count_free_fields(elfs: List[complex]) -> int:
   y = 1+max(ilist) - min(ilist)
   return x*y-len(elfs)
 
-def get_input() -> Dict[complex, List[complex]]:
+def get_input() -> List[complex]:
   with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
     content = [[c for c in s.strip()] for s in f.read().rstrip().split('\n')]
-  elfs = {}
+  elfs = []
   for y, l in enumerate(content):
     for x, c in enumerate(l):
       if c == '#':
-        elfs[complex(x, y)] = []
+        elfs.append(complex(x, y))
   return elfs
 
 @profiler
 def solve():
-  elfs: Dict[complex, List[complex]] = get_input()
+  elfs: List[complex] = get_input()
   print("Part 1: %d\nPart 2: %d" % calc(elfs))
 
 if __name__ == "__main__":
