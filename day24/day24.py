@@ -28,9 +28,10 @@ def bfs(valley: List[List[str]], blizzards: List[List[List[int]]], R: int, C: in
   queue: List[Tuple[int, int, int]] = list()
 
   def add(r: int, c: int, t: int, d: int) -> None:
-    if r < 0 or c < 0 or r >= R or c >= C or valley[r][c] == '#' or blizzards[r][c][t] > 0:
-      return
-    if dist[r][c][t] <= d:
+    if (r < 0 or c < 0 or r >= R or c >= C or
+        valley[r][c] == '#' or
+        blizzards[r][c][t] > 0 or
+        dist[r][c][t] <= d):
       return
     dist[r][c][t] = d
     queue.append((r, c, t))
