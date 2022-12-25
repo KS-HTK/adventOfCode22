@@ -11,7 +11,7 @@ def profiler(method):
 @profiler
 def timeall():
   times = {}
-  for i in range(21):
+  for i in range(25):
     name = f'day{i+1:02d}.day{i+1:02d}'
     day = __import__(name, fromlist=[''])
 
