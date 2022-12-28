@@ -84,7 +84,7 @@ def count_free_fields(elves: Set[complex]) -> int:
   return x*y-len(elves)
 
 def get_input() -> Set[complex]:
-  with open(os.path.dirname(os.path.realpath(__file__))+'/data_23.txt', 'r', encoding='utf-8') as f:
+  with open(os.path.dirname(os.path.realpath(__file__))+'/input', 'r', encoding='utf-8') as f:
     content = [[c for c in s.strip()] for s in f.read().rstrip().split('\n')]
   elves: Set[complex] = set()
   for y, l in enumerate(content):
